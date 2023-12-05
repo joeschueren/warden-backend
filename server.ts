@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
     credentials: true,
-    origin: "https://warden-finance.vercel.app/"
+    origin: "https://warden-finance.vercel.app"
 }));
 
 app.use(session({
