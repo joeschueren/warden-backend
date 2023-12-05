@@ -77,9 +77,9 @@ function getYearMonth() {
     var month = String(currentTime.getMonth() + 1).padStart(2, '0');
     return "".concat(year, "/").concat(month);
 }
-var pool = new pg.Pool(process.env.DB_CONNECTION_STRING);
+var connectionString = process.env.DB_CONNECTION_STRING;
+var pool = new pg.Pool({ connectionString: connectionString });
 try {
-    console.log("trying to connect");
     pool.connect();
     var query = "CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, email VARCHAR(100), password text, picture BYTEA);";
     pool.query(query).catch(function (err) { return console.log(err); });
