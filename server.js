@@ -381,6 +381,7 @@ app.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0,
                                 console.log("setting cookies");
                                 req.session.username = email;
                                 req.session.authenticated = true;
+                                console.log(email);
                                 res.status(200).json(email);
                             }
                         }

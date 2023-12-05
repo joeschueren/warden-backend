@@ -461,6 +461,7 @@ app.post("/login", async (req:any, res:any) =>{
                             console.log("setting cookies");
                             req.session.username = email;
                             req.session.authenticated = true;
+                            console.log(email);
                             res.status(200).json(email);
                         }
                         
