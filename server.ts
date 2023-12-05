@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
     credentials: true,
-    origin: "http://192.168.0.238:3000"
+    origin: "https://warden-finance.vercel.app/"
 }));
 
 app.use(session({
@@ -21,7 +21,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false,
+      secure: true,
       maxAge: 3600000,
     },
   }));
