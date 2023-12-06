@@ -361,7 +361,7 @@ app.post("/register", function (req, res) { return __awaiter(_this, void 0, void
         return [2 /*return*/];
     });
 }); });
-app.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+app.get("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var email, password;
     return __generator(this, function (_a) {
         email = req.body.email;

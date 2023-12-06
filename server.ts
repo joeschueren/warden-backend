@@ -444,7 +444,7 @@ app.post("/register", async (req: any, res: any) => {
 })
 
 
-app.post("/login", async (req:any, res:any) =>{
+app.get("/login", async (req:any, res:any) =>{
     const email = req.body.email;
     const password = req.body.password;
 
