@@ -12,7 +12,8 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
-    credentials: true
+    credentials: true,
+    origin: "https://warden-finance.vercel.app"
 }));
 
 const saltRounds= 5;
@@ -470,8 +471,9 @@ app.post("/login", async (req:any, res:any) =>{
                             console.log("setting cookies");
                             req.session.username = email;
                             req.session.authenticated = true;
-                            console.log(email);
-                            res.status(200).json(email);
+                            req.session.save(() => {
+                                res.status(200).json(email);
+                            })
                         }
                         
                     }
