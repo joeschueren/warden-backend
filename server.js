@@ -52,7 +52,7 @@ var bcrypt = require("bcryptjs");
 var multer = require("multer");
 var session = require("express-session");
 var pg = require("pg");
-var store = new session.MemoryStore();
+var pgSession = require("connect-pg-simple")(session);
 require("dotenv").config();
 var app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -60,16 +60,6 @@ app.use(express.json());
 app.use(cors({
     credentials: true,
     origin: "https://warden-finance.vercel.app"
-}));
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        sameSite: "none",
-        secure: true,
-        maxAge: 3600000,
-    },
 }));
 var saltRounds = 5;
 function getYearMonth() {
@@ -80,10 +70,24 @@ function getYearMonth() {
 }
 var connectionString = process.env.DB_CONNECTION_STRING;
 var pool = new pg.Pool({ connectionString: connectionString });
+app.use(session({
+    store: new pgSession({
+        pool: pool
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        sameSite: "none",
+        secure: true,
+        maxAge: 3600000,
+    },
+}));
 try {
     pool.connect();
     var query = "CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, email VARCHAR(100), password text, picture BYTEA);";
     pool.query(query).catch(function (err) { return console.log(err); });
+    pool.query("CREATE TABLE IF NOT EXISTS sessions (\n        sid VARCHAR NOT NULL PRIMARY KEY,\n        sess JSON NOT NULL,\n        expire TIMESTAMPTZ NOT NULL\n      );").catch(function (err) { return console.log(err); });
     pool.query("CREATE TABLE IF NOT EXISTS months (\n        id serial PRIMARY KEY,\n        email VARCHAR(100),\n        year_month VARCHAR(12),\n        food NUMERIC(14,2),\n        bills NUMERIC(14,2),\n        entertainment NUMERIC(14,2),\n        transportation NUMERIC(14,2),\n        personal_care NUMERIC(14,2),\n        shopping NUMERIC(14,2),\n        other NUMERIC(14,2),\n        max_budget NUMERIC(14,2));")
         .catch(function (err) { return console.log(err); });
     pool.query("CREATE TABLE IF NOT EXISTS budgets (\n        id serial PRIMARY KEY,\n        email VARCHAR(100),\n        year_month VARCHAR(12),\n        food NUMERIC(14,2),\n        bills NUMERIC(14,2),\n        entertainment NUMERIC(14,2),\n        transportation NUMERIC(14,2),\n        personal_care NUMERIC(14,2),\n        shopping NUMERIC(14,2),\n        other NUMERIC(14,2)\n    )")

@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const session = require("express-session");
 const pg = require("pg");
-const store = new session.MemoryStore();
+const pgSession = require("connect-pg-simple")(session);
 require("dotenv").config();
 
 const app = express();
@@ -15,17 +15,6 @@ app.use(cors({
     credentials: true,
     origin: "https://warden-finance.vercel.app"
 }));
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        sameSite: "none",
-        secure: true,
-        maxAge: 3600000,
-    },
-  }));
 
 const saltRounds= 5;
 
@@ -42,11 +31,31 @@ const connectionString = process.env.DB_CONNECTION_STRING;
 
 const pool = new pg.Pool({connectionString})
 
+app.use(session({
+    store: new pgSession({
+        pool: pool
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        sameSite: "none",
+        secure: true,
+        maxAge: 3600000,
+    },
+  }));
+
 try{
     pool.connect();
 
     const query= "CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, email VARCHAR(100), password text, picture BYTEA);"
     pool.query(query).catch((err: Error): void => console.log(err));
+
+    pool.query(`CREATE TABLE IF NOT EXISTS sessions (
+        sid VARCHAR NOT NULL PRIMARY KEY,
+        sess JSON NOT NULL,
+        expire TIMESTAMPTZ NOT NULL
+      );`).catch((err: Error): void => console.log(err))
 
     pool.query(`CREATE TABLE IF NOT EXISTS months (
         id serial PRIMARY KEY,
