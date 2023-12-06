@@ -58,8 +58,7 @@ var app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
-    credentials: true,
-    origin: "https://warden-finance.vercel.app"
+    credentials: true
 }));
 var saltRounds = 5;
 function getYearMonth() {
