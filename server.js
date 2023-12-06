@@ -55,6 +55,7 @@ var pg = require("pg");
 var pgSession = require("connect-pg-simple")(session);
 require("dotenv").config();
 var app = express();
+app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
@@ -361,7 +362,7 @@ app.post("/register", function (req, res) { return __awaiter(_this, void 0, void
         return [2 /*return*/];
     });
 }); });
-app.get("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+app.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var email, password;
     return __generator(this, function (_a) {
         email = req.body.email;

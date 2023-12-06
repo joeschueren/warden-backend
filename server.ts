@@ -9,6 +9,8 @@ require("dotenv").config();
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
@@ -444,7 +446,7 @@ app.post("/register", async (req: any, res: any) => {
 })
 
 
-app.get("/login", async (req:any, res:any) =>{
+app.post("/login", async (req:any, res:any) =>{
     const email = req.body.email;
     const password = req.body.password;
 
