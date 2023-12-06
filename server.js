@@ -87,7 +87,7 @@ try {
     pool.connect();
     var query = "CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, email VARCHAR(100), password text, picture BYTEA);";
     pool.query(query).catch(function (err) { return console.log(err); });
-    pool.query("CREATE TABLE IF NOT EXISTS sessions (\n        sid VARCHAR NOT NULL PRIMARY KEY,\n        sess JSON NOT NULL,\n        expire TIMESTAMPTZ NOT NULL\n      );").catch(function (err) { return console.log(err); });
+    pool.query("CREATE TABLE IF NOT EXISTS session (\n        sid VARCHAR NOT NULL PRIMARY KEY,\n        sess JSON NOT NULL,\n        expire TIMESTAMPTZ NOT NULL\n      );").catch(function (err) { return console.log(err); });
     pool.query("CREATE TABLE IF NOT EXISTS months (\n        id serial PRIMARY KEY,\n        email VARCHAR(100),\n        year_month VARCHAR(12),\n        food NUMERIC(14,2),\n        bills NUMERIC(14,2),\n        entertainment NUMERIC(14,2),\n        transportation NUMERIC(14,2),\n        personal_care NUMERIC(14,2),\n        shopping NUMERIC(14,2),\n        other NUMERIC(14,2),\n        max_budget NUMERIC(14,2));")
         .catch(function (err) { return console.log(err); });
     pool.query("CREATE TABLE IF NOT EXISTS budgets (\n        id serial PRIMARY KEY,\n        email VARCHAR(100),\n        year_month VARCHAR(12),\n        food NUMERIC(14,2),\n        bills NUMERIC(14,2),\n        entertainment NUMERIC(14,2),\n        transportation NUMERIC(14,2),\n        personal_care NUMERIC(14,2),\n        shopping NUMERIC(14,2),\n        other NUMERIC(14,2)\n    )")

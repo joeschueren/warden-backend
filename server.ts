@@ -51,7 +51,7 @@ try{
     const query= "CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, email VARCHAR(100), password text, picture BYTEA);"
     pool.query(query).catch((err: Error): void => console.log(err));
 
-    pool.query(`CREATE TABLE IF NOT EXISTS sessions (
+    pool.query(`CREATE TABLE IF NOT EXISTS session (
         sid VARCHAR NOT NULL PRIMARY KEY,
         sess JSON NOT NULL,
         expire TIMESTAMPTZ NOT NULL
